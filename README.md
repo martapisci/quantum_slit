@@ -1,1 +1,1 @@
-# Schroedinger_equation
+# quantum_slit
