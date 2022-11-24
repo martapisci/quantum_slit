@@ -1,6 +1,6 @@
 <img align="right" width=20% src="logo.gif" />
 
-# penning_trap
+# quantum_slit
 ![License](https://img.shields.io/github/license/martapisci/quantum_slit)
 ![Language](https://img.shields.io/badge/language-c%2B%2B-blue)
 ![Size](https://img.shields.io/github/repo-size/martapisci/quantum_slit)
