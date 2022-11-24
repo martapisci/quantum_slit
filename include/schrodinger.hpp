@@ -52,8 +52,9 @@ public:
      * @param sgm_y Initial width (y) of the wave packet
      * @param p_x Initial momentum (x) of the wave packet
      * @param p_y Initial momentum (y) of the wave packet
+     * @param u Vector variant of the matrix U
      */
-    void set_U(const double x_c, const double y_c, const double sgm_x, const double sgm_y, const double p_x, const double p_y);
+    void set_U(const double x_c, const double y_c, const double sgm_x, const double sgm_y, const double p_x, const double p_y, arma::cx_vec &u_given);
 
     /**
      * @brief Evolve the system by a spatial step h and a time step dt

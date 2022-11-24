@@ -24,6 +24,7 @@ int main()
     // initialize matrices and vectors
     arma::mat V = arma::mat(M_2, M_2).randu(); // Potential matrix
     V = 1000* V;
+    arma::cx_vec u = arma::cx_vec(M-2);
 
     // initialize lattice
     Schrodinger lattice = Schrodinger(M, h, dt, V);
