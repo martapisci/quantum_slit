@@ -18,10 +18,22 @@ private:
 public:
     int M;           // number of points along one side
     arma::cx_vec *u; // vectorized matrix with current state
+    arma::mat *V;    // potential matrix
     // arma::Mat<std::complex<double>> *U; // U matrix
 
     // Constructors
-    Schrodinger(const int M_given, const double h, const double dt, arma::mat &V_given);
+    Schrodinger(const int M_given, const double h, const double dt);
+
+    /**
+     * @brief Set the potential matrix
+     * @param V Potential matrix
+     */
+    void set_potential(arma::mat &V_given);
+
+    /**
+     * @brief Set A and B matrices
+     */
+    void set_AB();
 
     /**
      * @brief Switch from i,j indices to single index
@@ -57,11 +69,15 @@ public:
     void set_U(const double x_c, const double y_c, const double sgm_x, const double sgm_y, const double p_x, const double p_y, arma::cx_vec &u_given);
 
     /**
-     * @brief Evolve the system by a spatial step h and a time step dt
-     * @param h Spatial step
-     * @param dt Time step
+     * @brief Evolve the system
      */
-    void evolve(const double h, const double dt);
+    void evolve();
+
+    /**
+     * @brief Print on screnn and file the system at the current state
+     * 
+     */
+    void print_data();
 };
 
 #endif //__schrodinger_hpp__
