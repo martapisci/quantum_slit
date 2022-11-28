@@ -1,9 +1,11 @@
 #include "schrodinger.hpp"
+#include "utils.hpp"
 #include <armadillo>
 #include <cassert>
 #include <random>
 #include <iostream>
 #include <math.h>
+#include <complex>
 
 std::complex<double> i_unit = std::complex<double>(0., 1.);
 
@@ -20,15 +22,16 @@ Schrodinger::Schrodinger(const int M_given, const double h_given, const double d
 }
 
 // Set the potential matrix
-void Schrodinger::set_potential(arma::mat &V_given)
+void Schrodinger::set_potential(arma::sp_mat &V_given, const int &switch_given)
 {
     // wall between 0.49 and 0.51
     V = &V_given;
-    (*V).fill(0.);
 
-
-    
     double x, y, V0 = 1e+10;
+
+    if(switch_given == 0)
+        V0 = 0.;
+
     // construct vertical walls
     for (int i{}; i < M - 2; i++)
     {
@@ -63,8 +66,9 @@ void Schrodinger::set_AB()
     {
         for (int j{}; j < M_2; j++)
         {
-            a(single_index(i, j)) = 1. + 4. * r + i_unit * 0.5 * dt * (*V)(i, j);
-            b(single_index(i, j)) = 1. - 4. * r - i_unit * 0.5 * dt * (*V)(i, j);
+            std::complex<double> k = std::complex<double>((*V)(i, j), 0.);
+            a(single_index(i, j)) = 1. + 4. * r + i_unit * 0.5 * dt * k;
+            b(single_index(i, j)) = 1. - 4. * r - i_unit * 0.5 * dt * k;
         }
     }
 
@@ -141,14 +145,14 @@ void Schrodinger::set_B(const arma::cx_double r, const arma::cx_vec &b)
 }
 
 // Set up the initial state in a gaussian wave packet
-void Schrodinger::set_U(const double x_c, const double y_c, const double sgm_x, const double sgm_y, const double p_x, const double p_y, arma::cx_vec &u_given)
+void Schrodinger::set_initial_state(const double x_c, const double y_c, const double sgm_x, const double sgm_y, const double p_x, const double p_y, arma::cx_vec &u_given)
 {
     u = &u_given;
     double sgm_x2 = sgm_x * sgm_x;
     double sgm_y2 = sgm_y * sgm_y;
     double x = 0, y = 0;
 
-    arma::cx_double normalization = arma::cx_double(0., 0.);
+    double normalization = 0.;
     for (int i = 1; i < M - 1; i++)
     {
         for (int j = 1; j < M - 1; j++)
@@ -156,19 +160,17 @@ void Schrodinger::set_U(const double x_c, const double y_c, const double sgm_x, 
             x = i * h;
             y = j * h;
             double delta_x = x - x_c, delta_y = y - y_c;
-            (*u)(single_index(i - 1, j - 1)) = std::exp(-1. * delta_x * delta_x / (2 * sgm_x2) - 1. * delta_y * delta_y / (2 * sgm_y2) + i_unit * p_x * delta_x + i_unit * p_y * delta_y);
+            (*u)(single_index(i - 1, j - 1)) = std::exp(-1. * delta_x * delta_x / (2. * sgm_x2) - 1. * delta_y * delta_y / (2. * sgm_y2) + i_unit * p_x * delta_x + i_unit * p_y * delta_y);
             normalization += std::abs((*u)(single_index(i - 1, j - 1))); // sum of |u|^2 for normalization
         }
         // Above we can just compute the u vector, and if we want to store to file
         // the full solution matrix U maybe we can just "reshape" the vector back
         // into a matrix with .reshape() from armadillo ? We'll see... tocca.
     }
-    // compute renormalization
-    normalization /= (M - 2) * (M - 2);
-    normalization = std::sqrt(normalization);
 
     // normalize
-    (*u) = (*u) / normalization;
+    (*u) = (*u)/ normalization;
+
 }
 
 // Evolve the system
@@ -180,31 +182,54 @@ void Schrodinger::evolve()
     b = B * (*u);
 
     // solve matrix equation A*u = b
-    (*u) = arma::solve(A, b);
+    (*u) = arma::spsolve(A, b);
 }
 
-// Print on scren and file the system at the current state
-void Schrodinger::print_data()
+// Print to file the system at the current state
+void Schrodinger::print_data(std::ofstream &stream_given, const int width, const int prec)
 {
-    int M_2 = M - 2;
-    arma::cx_mat U; // U matrix
-    U.set_size(M, M);
+    // fill first row
+    for(int i{}; i < M; i++)
+    {
+        stream_given << scientific_format(std::abs(std::complex<double>(0., 0.)),width,prec)<< " ";
+    }
+    stream_given << std::endl;
+
+    for (int i = 1; i < M - 1; i++)
+    {
+        stream_given << scientific_format(std::abs(std::complex<double>(0., 0.)),width,prec) << " ";
+        for (int j = 1; j < M - 1; j++)
+        {
+            stream_given << scientific_format(std::abs((*u)(single_index(i - 1, j - 1))),width,prec) << " ";
+        }
+        stream_given << scientific_format(std::abs(std::complex<double>(0., 0.)),width,prec) << std::endl;
+    }
+    // here in the loop we can directly print to file
+    // without the need of having the actual matrix U saved in memory!
+    // we only need the vector u !
+
+    // fill last row
+    for(int i{}; i < M; i++)
+    {
+        stream_given << scientific_format(std::abs(std::complex<double>(0., 0.)),width,prec)<< " ";
+    }
+    stream_given << std::endl;
+
+}
+
+//Calculate current total probability
+void Schrodinger::probability(double &prob)
+{
+    double probability = 0.;
     for (int i = 1; i < M - 1; i++)
     {
         for (int j = 1; j < M - 1; j++)
         {
-            U(i, j) = (*u)(single_index(i - 1, j - 1));
+            probability += std::abs((*u)(single_index(i - 1, j - 1))); // sum of |u_ij|^2 
         }
     }
-    // here in the loop we can directly print to file
-    // without the need of having the actual matrix U saved in memory!
 
-    U.col(0).fill(std::complex<double>(0., 0.));
-    U.col(M - 1).fill(std::complex<double>(0., 0.));
-    U.row(0).fill(std::complex<double>(0., 0.));
-    U.row(M - 1).fill(std::complex<double>(0., 0.));
+    prob = probability;
 
-    U.print();
-    //U.save("data/state_evolved.txt", arma::raw_ascii);
 
 }

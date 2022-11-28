@@ -3,10 +3,12 @@
 #define __utils_hpp__
 
 #include <vector>
+#include <complex>
 
 // Return a string with a double in scientific notation
 std::string scientific_format(double d, const int &width, const int &prec);
-
+// Return a string with a double in scientific notation
+std::string scientific_format(std::complex<double> z, const int &width, const int &prec);
 // Return a string with a vector<double> in scientific notation
 std::string scientific_format(const std::vector<double> &v, const int &width, const int &prec);
 

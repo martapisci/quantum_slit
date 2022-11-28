@@ -4,7 +4,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENTIONS OFF)
-set(CMAKE_CXX_FLAGS "-O2")
+set(CMAKE_CXX_FLAGS "-O3")
 
 project(quantum_slit
 	VERSION 1.0
@@ -29,9 +29,9 @@ target_include_directories (trace PUBLIC
 	)
 
 # --- EXECUTABLES ---
-add_executable(main
-	src/main.cpp)
-target_link_libraries(main PUBLIC trace)
+add_executable(probability
+	src/probability.cpp)
+target_link_libraries(probability PUBLIC trace)
 
 
 # --- TESTS ---

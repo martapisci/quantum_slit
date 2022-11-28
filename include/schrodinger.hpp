@@ -11,15 +11,13 @@ private:
     double h;               // spatial step
     double dt;              // time step
     std::complex<double> r; // r parameter
-    arma::cx_mat A;         // A matrix
-    arma::cx_mat B;         // B matrix
-    // Maybe convenient option to make matrices sp_cx_mat from Armadillo. Look documentation...
+    arma::sp_cx_mat A;      // A matrix
+    arma::sp_cx_mat B;      // B matrix
 
 public:
     int M;           // number of points along one side
     arma::cx_vec *u; // vectorized matrix with current state
-    arma::mat *V;    // potential matrix
-    // arma::Mat<std::complex<double>> *U; // U matrix
+    arma::sp_mat *V; // potential matrix
 
     // Constructors
     Schrodinger(const int M_given, const double h, const double dt);
@@ -27,8 +25,9 @@ public:
     /**
      * @brief Set the potential matrix
      * @param V Potential matrix
+     * @param switch Set potential to zero everywhere (switch=0), or single(1)/double(2)/triple(3) slit
      */
-    void set_potential(arma::mat &V_given);
+    void set_potential(arma::sp_mat &V_given, const int &switch_given);
 
     /**
      * @brief Set A and B matrices
@@ -66,7 +65,7 @@ public:
      * @param p_y Initial momentum (y) of the wave packet
      * @param u Vector variant of the matrix U
      */
-    void set_U(const double x_c, const double y_c, const double sgm_x, const double sgm_y, const double p_x, const double p_y, arma::cx_vec &u_given);
+    void set_initial_state(const double x_c, const double y_c, const double sgm_x, const double sgm_y, const double p_x, const double p_y, arma::cx_vec &u_given);
 
     /**
      * @brief Evolve the system
@@ -74,10 +73,18 @@ public:
     void evolve();
 
     /**
-     * @brief Print on screnn and file the system at the current state
-     * 
+     * @brief Print to file the system at the current state
+     * @param stream Stream to file
+     * @param width Width of columns for data storing
+     * @param prec Precision of data storing
      */
-    void print_data();
+    void print_data(std::ofstream &stream, const int width, const int prec);
+
+    /**
+     * @brief Calculate current total probability
+     * @param prob Probability
+     */
+    void probability(double &prob);
 };
 
 #endif //__schrodinger_hpp__
