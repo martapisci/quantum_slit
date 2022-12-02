@@ -29,29 +29,27 @@ void Schrodinger::set_potential(arma::sp_mat &V_given, const int &switch_given)
 
     double x, y, V0 = 1e+10;
 
-    if(switch_given == 0)
+    if (switch_given == 0)
         V0 = 0.;
 
     // construct vertical walls
     for (int i{}; i < M - 2; i++)
     {
         x = i * h;
-        if (x >= 0.49 && x<= 0.51)
+        if (x >= 0.49 && x <= 0.51)
         {
-            (*V).col(i).fill(V0);   
+            (*V).row(i).fill(V0);
         }
     }
     // make slits in the wall, just double slit for now...
-    for(int j{}; j < M-2; j++)
+    for (int j{}; j < M - 2; j++)
     {
         y = j * h;
-        if(y >= 0.425 && y <= 0.475 )
-            (*V).row(j).fill(0.);
-        if(y >= 0.525 && y <= 0.575 )
-            (*V).row(j).fill(0.);
-
+        if (y >= 0.425 && y <= 0.475)
+            (*V).col(j).fill(0.);
+        if (y >= 0.525 && y <= 0.575)
+            (*V).col(j).fill(0.);
     }
-
 }
 
 // Set A and B matrices
@@ -90,21 +88,24 @@ void Schrodinger::set_A(const arma::cx_double r, const arma::cx_vec &a)
 
     // Start from identity matrix
     A.eye(M_2 * M_2, M_2 * M_2);
-
-    // Loop that fills rows with repating "block"
-    for (int i{}; i < M_2 * M_2; i++)
+    // For every submatrix...
+    for(int i_block{}; i_block< M_2; i_block++)
     {
-
-        A(i, i) = a(i);
-
-        if ((i + 1) % M_2 != 0)
+        int i_tmp = M_2*i_block;
+        for(int i{}; i < M_2; i++)
         {
-            A(i, i + 1) = -r;
-            A(i + 1, i) = -r;
+            int k = i_tmp + i;
+            // fill the submatrix with diagonals
+            A(k, k) = a(k); 
+            // and fill with off diagonal r's except the last step
+            if(i != M_2 -1)
+            {
+                A(k, k + 1) = -r;
+                A(k + 1, k) = -r;
+            }
         }
     }
-
-    // loop that fills the outer off diagonals -r
+    // Now fill outer off-diagonals
     int i_max = M_2 * (M_2 - 1);
     for (int i = 0; i < i_max; i++)
     {
@@ -121,21 +122,24 @@ void Schrodinger::set_B(const arma::cx_double r, const arma::cx_vec &b)
 
     // Start from identity matrix
     B.eye(M_2 * M_2, M_2 * M_2);
-
-    // Loop that fills rows with repating "block"
-    for (int i{}; i < M_2 * M_2; i++)
+    // For every submatrix...
+    for(int i_block{}; i_block< M_2; i_block++)
     {
-
-        B(i, i) = b(i);
-
-        if ((i + 1) % M_2 != 0)
+        int i_tmp = M_2*i_block;
+        for(int i{}; i < M_2; i++)
         {
-            B(i, i + 1) = r;
-            B(i + 1, i) = r;
+            int k = i_tmp + i;
+            // fill the submatrix with diagonals
+            B(k, k) = b(k); 
+            // and fill with off diagonal r's except the last step
+            if(i != M_2 -1)
+            {
+                B(k, k + 1) = r;
+                B(k + 1, k) = r;
+            }
         }
     }
-
-    // loop that fills the outer off diagonals +r
+    // Now fill outer off-diagonals
     int i_max = M_2 * (M_2 - 1);
     for (int i = 0; i < i_max; i++)
     {
@@ -160,17 +164,15 @@ void Schrodinger::set_initial_state(const double x_c, const double y_c, const do
             x = i * h;
             y = j * h;
             double delta_x = x - x_c, delta_y = y - y_c;
-            (*u)(single_index(i - 1, j - 1)) = std::exp(-1. * delta_x * delta_x / (2. * sgm_x2) - 1. * delta_y * delta_y / (2. * sgm_y2) + i_unit * p_x * delta_x + i_unit * p_y * delta_y);
-            normalization += std::abs((*u)(single_index(i - 1, j - 1))); // sum of |u|^2 for normalization
+            std::complex<double> tmp = std::exp(-1. * delta_x * delta_x / (2. * sgm_x2) - 1. * delta_y * delta_y / (2. * sgm_y2) + i_unit * p_x * delta_x + i_unit * p_y * delta_y);
+            (*u)(single_index(i - 1, j - 1)) = tmp;
+            normalization += std::real(tmp*std::conj(tmp));
+
         }
-        // Above we can just compute the u vector, and if we want to store to file
-        // the full solution matrix U maybe we can just "reshape" the vector back
-        // into a matrix with .reshape() from armadillo ? We'll see... tocca.
     }
 
     // normalize
-    (*u) = (*u)/ normalization;
-
+    (*u) = (*u) /(std::sqrt(normalization));
 }
 
 // Evolve the system
@@ -182,42 +184,22 @@ void Schrodinger::evolve()
     b = B * (*u);
 
     // solve matrix equation A*u = b
-    (*u) = arma::spsolve(A, b);
+    arma::spsolve( (*u), A, b);
 }
 
-// Print to file the system at the current state
-void Schrodinger::print_data(std::ofstream &stream_given, const int width, const int prec)
+//Update the U state matrix
+void Schrodinger::U(arma::cx_mat &U)
 {
-    // fill first row
-    for(int i{}; i < M; i++)
-    {
-        stream_given << scientific_format(std::abs(std::complex<double>(0., 0.)),width,prec)<< " ";
-    }
-    stream_given << std::endl;
+    // copy state
+    arma::cx_mat u_tmp = *u;
 
-    for (int i = 1; i < M - 1; i++)
-    {
-        stream_given << scientific_format(std::abs(std::complex<double>(0., 0.)),width,prec) << " ";
-        for (int j = 1; j < M - 1; j++)
-        {
-            stream_given << scientific_format(std::abs((*u)(single_index(i - 1, j - 1))),width,prec) << " ";
-        }
-        stream_given << scientific_format(std::abs(std::complex<double>(0., 0.)),width,prec) << std::endl;
-    }
-    // here in the loop we can directly print to file
-    // without the need of having the actual matrix U saved in memory!
-    // we only need the vector u !
-
-    // fill last row
-    for(int i{}; i < M; i++)
-    {
-        stream_given << scientific_format(std::abs(std::complex<double>(0., 0.)),width,prec)<< " ";
-    }
-    stream_given << std::endl;
-
+    // shape it as a matrix
+    u_tmp.reshape(M-2,M-2);
+    
+    // update the 'inner' state matrix
+    U(arma::span(1, M - 2), arma::span(1, M - 2)) = u_tmp;
 }
-
-//Calculate current total probability
+// Calculate current total probability
 void Schrodinger::probability(double &prob)
 {
     double probability = 0.;
@@ -225,11 +207,10 @@ void Schrodinger::probability(double &prob)
     {
         for (int j = 1; j < M - 1; j++)
         {
-            probability += std::abs((*u)(single_index(i - 1, j - 1))); // sum of |u_ij|^2 
+            std::complex<double> tmp = (*u)(single_index(i - 1, j - 1));
+            probability += std::real(tmp*std::conj(tmp)); // sum of |u_ij|^2
         }
     }
 
     prob = probability;
-
-
 }

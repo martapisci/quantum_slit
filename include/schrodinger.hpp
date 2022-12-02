@@ -73,12 +73,9 @@ public:
     void evolve();
 
     /**
-     * @brief Print to file the system at the current state
-     * @param stream Stream to file
-     * @param width Width of columns for data storing
-     * @param prec Precision of data storing
+     * @brief Update the U state matrix
      */
-    void print_data(std::ofstream &stream, const int width, const int prec);
+    void U(arma::cx_mat &U);
 
     /**
      * @brief Calculate current total probability
