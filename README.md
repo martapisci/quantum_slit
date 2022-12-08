@@ -1,5 +1,6 @@
 <img align="right" width=20% src="logo.gif" />
 
+[comment]: <![](./title.svg)>
 # quantum_slit
 ![License](https://img.shields.io/github/license/martapisci/quantum_slit)
 ![Language](https://img.shields.io/badge/language-c%2B%2B-blue)
@@ -42,23 +43,9 @@ or
 git clone git@github.com:martapisci/quantum_slit
 ```
 
-### g++
-
-You can compile and link with `g++`.
-
-```bash
-g++ main.cpp src/*.cpp -I include -larmadillo -o quantum
-```
-You might need to add the  `-std=gnu++11` if you are a Mac user.
-You can then run the executable with
-
-```bash
-./quantum
-```
-
 ### CMAKE
 
-Alternatively you can build everything with `cmake`. First you need to create a `build/` directory and move into it
+In order to build everything you need `cmake`. First you need to create a `build/` directory and move into it
 ```bash
 mkdir build; cd build
 ```
@@ -75,7 +62,7 @@ from the same `build/` directory.
 ## Filesystem
 The repo is organized as follows:
 ```
-penning_trap
+quantum_slit
 │
 └───build/
 │   └───data/

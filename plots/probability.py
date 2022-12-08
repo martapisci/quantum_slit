@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import pandas as pd
@@ -13,12 +12,16 @@ import pandas as pd
 #state4 = pd.read_csv("../build/data/probability_M40.txt", names= ['t', 'p'], sep=" ")
 #state5 = pd.read_csv("../build/data/probability_M50.txt", names= ['t', 'p'], sep=" ")
 #state100_no = pd.read_csv("../build/data/probability_M100_no_slit.txt", names= ['t', 'p'], sep=" ")
-state200 = pd.read_csv("../build/data/probability_M200_slit.txt", names= ['t', 'p'], sep=" ")
-state200_no = pd.read_csv("../build/data/probability_M200_no_slit.txt", names= ['t', 'p'], sep=" ")
+#state200 = pd.read_csv("../build/data/probability_M200_slit.txt", names= ['t', 'p'], sep=" ")
+#state200_no = pd.read_csv("../build/data/probability_M200_no_slit.txt", names= ['t', 'p'], sep=" ")
+psi0 = pd.read_csv("../build/data/probability_M200_nslit0.txt", names= ['t', 'p'], sep=" ")
+psi1 = pd.read_csv("../build/data/probability_M200_nslit1.txt", names= ['t', 'p'], sep=" ")
+psi2 = pd.read_csv("../build/data/probability_M200_nslit2.txt", names= ['t', 'p'], sep=" ")
+psi3 = pd.read_csv("../build/data/probability_M200_nslit3.txt", names= ['t', 'p'], sep=" ")
 
 #state = state.astype(float)
-w = 10
-h = 10
+w = 5
+h = 4
 fs = 12
 cmap = plt.get_cmap('tab20')
 save_fig = True
@@ -35,8 +38,12 @@ plt.figure(figsize=(w,h))
 #plt.plot(state5['t'], state5['p'], label='M=50')
 #plt.plot(state100_no['t'], state100_no['p'], label='M=100')
 #plt.plot(state200['t'], state200['p'], label='slit')
-plt.plot(state200_no['t'], state200_no['p'], label='M=200, no slit')
-plt.plot(state200['t'], state200['p'], label='M=200, double slit')
+#plt.plot(state200_no['t'], np.abs(state200_no['p']), '.', markersize=2, label='M=200, no slit')
+#plt.plot(state200['t'], np.abs(state200['p']), '.', markersize=2, label='M=200, double slit')
+plt.plot(psi0['t'], np.abs(psi0['p']), '.', markersize=2, label='no slit')
+plt.plot(psi1['t'], np.abs(psi1['p']), '.', markersize=2, label='1 slit')
+plt.plot(psi2['t'], np.abs(psi2['p']), '.', markersize=2, label='2 slits')
+plt.plot(psi3['t'], np.abs(psi3['p']), '.', markersize=2, label='3 slits')
 
 plt.xscale('log')
 #plt.yscale('log')

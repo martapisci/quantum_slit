@@ -14,6 +14,17 @@ private:
     arma::sp_cx_mat A;      // A matrix
     arma::sp_cx_mat B;      // B matrix
 
+    /**
+     * @brief Make a potential wall of height V0 inside the given coordinates
+     * 
+     * @param i_min 
+     * @param i_max 
+     * @param j_min 
+     * @param j_max 
+     * @param V0 
+     */
+    void make_wall(const int i_min, const int i_max, const int j_min, const int j_max, const double V0);
+
 public:
     int M;           // number of points along one side
     arma::cx_vec *u; // vectorized matrix with current state
@@ -27,7 +38,7 @@ public:
      * @param V Potential matrix
      * @param switch Set potential to zero everywhere (switch=0), or single(1)/double(2)/triple(3) slit
      */
-    void set_potential(arma::sp_mat &V_given, const int &switch_given);
+    void set_potential(arma::sp_mat &V_given, const int &switch_given, const double V0);
 
     /**
      * @brief Set A and B matrices
@@ -42,14 +53,14 @@ public:
     int single_index(const int i, const int j);
 
     /**
-     * @brief Set up the A matrix for Crank-Nicholson method
+     * @brief Set up the A matrix for Crank-Nicolson method
      * @param r Complex number, off-diagonal element
      * @param a Vector full of diagonal elements
      */
     void set_A(const arma::cx_double r, const arma::cx_vec &a);
 
     /**
-     * @brief Set up the B matrix for Crank-Nicholson method
+     * @brief Set up the B matrix for Crank-Nicolson method
      * @param r Complex number, off-diagonal element
      * @param b Vector full of diagonal elements
      */
@@ -78,7 +89,7 @@ public:
     void U(arma::cx_mat &U);
 
     /**
-     * @brief Calculate current total probability
+     * @brief Calculate total probability
      * @param prob Probability
      */
     void probability(double &prob);

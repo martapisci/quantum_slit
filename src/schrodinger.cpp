@@ -9,6 +9,16 @@
 
 std::complex<double> i_unit = std::complex<double>(0., 1.);
 
+void Schrodinger::make_wall(const int i_min, const int i_max, const int j_min, const int j_max, const double V0)
+{
+    for (int i{i_min}; i<=i_max; i++){
+        for (int j{j_min}; j<=j_max; j++){
+            //std::cout<<i<<j<<std::endl;
+            (*V)(i,j) = V0;
+        }
+    }
+}
+
 // Constructor
 Schrodinger::Schrodinger(const int M_given, const double h_given, const double dt_given)
 {
@@ -22,33 +32,35 @@ Schrodinger::Schrodinger(const int M_given, const double h_given, const double d
 }
 
 // Set the potential matrix
-void Schrodinger::set_potential(arma::sp_mat &V_given, const int &switch_given)
+void Schrodinger::set_potential(arma::sp_mat &V_given, const int &switch_given, const double V0)
 {
-    // wall between 0.49 and 0.51
-    V = &V_given;
+        V = &V_given;
 
-    double x, y, V0 = 1e+10;
-
-    if (switch_given == 0)
-        V0 = 0.;
-
-    // construct vertical walls
-    for (int i{}; i < M - 2; i++)
-    {
-        x = i * h;
-        if (x >= 0.49 && x <= 0.51)
-        {
-            (*V).row(i).fill(V0);
-        }
-    }
-    // make slits in the wall, just double slit for now...
-    for (int j{}; j < M - 2; j++)
-    {
-        y = j * h;
-        if (y >= 0.425 && y <= 0.475)
-            (*V).col(j).fill(0.);
-        if (y >= 0.525 && y <= 0.575)
-            (*V).col(j).fill(0.);
+    switch(switch_given){
+        case 0:
+            make_wall(0.49/h - 1, 0.51/h - 1, 0., M-3, V0);
+            break;
+        case 1:
+            make_wall(0.49/h - 1, 0.51/h - 1, 0., 0.475/h - 1, V0);
+            // slit
+            make_wall(0.49/h - 1, 0.51/h - 1, 0.525/h - 1, M-3, V0);
+            break;
+        case 2: 
+            make_wall(0.49/h - 1, 0.51/h - 1, 0, 0.425/h - 1, V0);
+            // slit
+            make_wall(0.49/h - 1, 0.51/h - 1, 0.475/h - 1, 0.525/h - 1, V0);
+            // slit
+            make_wall(0.49/h - 1, 0.51/h - 1, 0.575/h - 1, M-3, V0);
+            break;
+        case 3:
+            make_wall(0.49/h - 1, 0.51/h - 1, 0, 0.375/h - 1, V0);
+            // slit
+            make_wall(0.49/h - 1, 0.51/h - 1, 0.425/h - 1, 0.475/h - 1, V0);
+            // slit
+            make_wall(0.49/h - 1, 0.51/h - 1, 0.525/h - 1, 0.575/h - 1, V0);
+            // slit
+            make_wall(0.49/h - 1, 0.51/h - 1, 0.625/h - 1, M-3, V0);
+            break;
     }
 }
 
@@ -203,6 +215,7 @@ void Schrodinger::U(arma::cx_mat &U)
 void Schrodinger::probability(double &prob)
 {
     double probability = 0.;
+
     for (int i = 1; i < M - 1; i++)
     {
         for (int j = 1; j < M - 1; j++)

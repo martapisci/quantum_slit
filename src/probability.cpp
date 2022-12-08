@@ -29,7 +29,8 @@ int main()
         double tmp;
         double M_, dt_, T_, x_c_, y_c_, sgm_x_, sgm_y_, p_x_, p_y_;
         int switch_potential_;
-        // Read file line by line
+
+        // Parser of file line by line
         while (std::getline(parameters, line))
         {
             // Skip lines with "#" at the first position
@@ -87,7 +88,7 @@ int main()
     Schrodinger lattice = Schrodinger(M, h, dt);
 
     // set potential
-    lattice.set_potential(V, switch_potential);
+    lattice.set_potential(V, switch_potential, 1e10);
 
     // set Crank-Nicholson matrices
     lattice.set_AB();
@@ -100,7 +101,7 @@ int main()
     std::cout << "Total initial probability is " << scientific_format(probability_now, width, prec) << std::endl;
 
     // Set file for probability
-    std::string potential_str = switch_potential ? "_slit" : "_no_slit";
+    std::string potential_str = "_nslit"+std::to_string(switch_potential);
     std::string filename = "data/probability_M" + std::to_string(M) + potential_str + ".txt";
     std::ofstream ofile;
     ofile.open(filename);
