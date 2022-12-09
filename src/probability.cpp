@@ -66,6 +66,7 @@ int main()
     double p_x = input_data.at(7);                // Initial momentum (x) of the wave packet
     double p_y = input_data.at(8);                // Initial momentum (y) of the wave packet
     int switch_potential = (int)input_data.at(9); // Potential switch
+    double V0 = 1e10;
 
     // ----------------------------------------------------------
 
@@ -88,7 +89,7 @@ int main()
     Schrodinger lattice = Schrodinger(M, h, dt);
 
     // set potential
-    lattice.set_potential(V, switch_potential, 1e10);
+    lattice.set_potential(V, switch_potential, V0);
 
     // set Crank-Nicholson matrices
     lattice.set_AB();
@@ -107,11 +108,11 @@ int main()
     ofile.open(filename);
 
     // time loop
-    int T_steps = T / dt;
+    int Nt = T / dt;
     // store data in cubes
-    arma::cube U_2 = arma::cube(M, M, T_steps+1, arma::fill::zeros);
-    arma::cube U_re = arma::cube(M, M, T_steps+1, arma::fill::zeros);
-    arma::cube U_im = arma::cube(M, M, T_steps+1, arma::fill::zeros);
+    arma::cube U_2 = arma::cube(M, M, Nt+1, arma::fill::zeros);
+    arma::cube U_re = arma::cube(M, M, Nt+1, arma::fill::zeros);
+    arma::cube U_im = arma::cube(M, M, Nt+1, arma::fill::zeros);
     // initial U
     lattice.U(U);
 
@@ -120,7 +121,7 @@ int main()
     U_im.slice(0) = arma::imag(U);
     double t = 0.;
     ofile << scientific_format(t, width, prec) << " " << scientific_format(probability_now - 1., width, prec) << std::endl;
-    for (int i = 1; i <= T_steps; i++)
+    for (int i = 1; i <= Nt; i++)
     {
         t = i * dt;
         std::cout << "Now calculating t=" << t << std::endl;
@@ -138,9 +139,9 @@ int main()
     ofile.close();
 
     // save state files
-    U_2.save("./data/modulus.bin", arma::arma_binary);
-    U_re.save("./data/re.bin", arma::arma_binary);
-    U_im.save("./data/im.bin", arma::arma_binary);
+    U_2.save("./data/modulus"+potential_str+".bin", arma::arma_binary);
+    U_re.save("./data/re"+potential_str+".bin", arma::arma_binary);
+    U_im.save("./data/im"+potential_str+".bin", arma::arma_binary);
 
     // debug line
     // std::cout << "DEBUG: " << __FILE__ << " " << __LINE__ << std::endl;
