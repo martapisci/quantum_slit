@@ -70,14 +70,6 @@ int main()
     int switch_potential = input_data.at(10);   // Potential switch
     // ----------------------------------------------------------
 
-
-    // ----------------------- PROGRESSBAR -----------------------
-    progressbar bar(100);
-    bar.set_todo_char(" ");
-    bar.set_done_char("█");
-    // ----------------------------------------------------------
-
-    
     // total current probabilty
     double probability_now;
     // Print parameters
@@ -129,6 +121,13 @@ int main()
     U_im.slice(0) = arma::imag(U);
     double t = 0.;
     ofile << scientific_format(t, width, prec) << " " << scientific_format(probability_now - 1., width, prec) << std::endl;
+
+    // ----------------------- PROGRESSBAR -----------------------
+    progressbar bar(Nt);
+    bar.set_todo_char(" ");
+    bar.set_done_char("█");
+    // ----------------------------------------------------------
+
     for (int i = 1; i <= Nt; i++)
     {
         bar.update();
@@ -155,7 +154,7 @@ int main()
     // debug line
     // std::cout << "DEBUG: " << __FILE__ << " " << __LINE__ << std::endl;
 
-    std::cout << "All good!" << std::endl;
+    std::cout << "\nAll good!" << std::endl;
     // all is good
     return 0;
 }
