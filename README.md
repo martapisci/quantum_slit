@@ -20,6 +20,7 @@ This repo is mantained by group 100 of the course FYS3150/4150 at UiO.
 - [Filesystem](#filesystem)
 - [HowToRun](#howtorun)
 - [Tests](#tests)
+- [Demo](#demo)
 - [Aknowledgements](#aknowledgements)
 - [License](#license)
 
@@ -107,6 +108,35 @@ CMake provides an easy command for code testing, i.e. from `build/` you can run
 ctest
 ```
 In this way all tests are run.
+
+## Demo
+Here you can find a little demonstration of what you can do with our beautiful little program. First of all run
+```bash
+./run.sh 200 0.000025 0.003 0.25 0.5 0.05 0.2 200 0 0. 0
+./run.sh 200 0.000025 0.003 0.25 0.5 0.05 0.2 200 0 1e10 1
+./run.sh 200 0.000025 0.003 0.25 0.5 0.05 0.2 200 0 1e10 2
+./run.sh 200 0.000025 0.003 0.25 0.5 0.05 0.2 200 0 1e10 3
+```
+After all of them finished you can move to `plots/` and make the animations with
+```bash
+python3 animation.py
+```
+This is going to be the result:
+<p align="center">
+<button  style="border: transparent; background-color: transparent;">
+    <img align="left" width=10% src="demo/no_slit"> 
+</button>
+<button  style="border: transparent; background-color: transparent;">
+    <img align="left" width=10% src="demo/single_slit"> 
+</button>
+<button style="border: transparent; background-color: transparent;">
+    <img align="left" width=10% src="demo/double_slit"> 
+</button>
+<button style="border: transparent; background-color: transparent;">
+    <img align="left" width=10% src="demo/triple_slit"> 
+</button>
+</p>
+
 
 
 ## License
