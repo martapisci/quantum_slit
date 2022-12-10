@@ -24,6 +24,3 @@ plt.legend(loc='best', fontsize = fs)
 plt.xlabel("$t$")
 plt.ylabel("$\Delta p(t)$")
 plt.savefig("../build/plots/probability_conservation.pdf") if save_fig else plt.show()
-
-
-plt.cla()
