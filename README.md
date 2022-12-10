@@ -18,6 +18,7 @@ This repo is mantained by group 100 of the course FYS3150/4150 at UiO.
 - [Requirements](#requirements)
 - [Building](#building)
 - [Filesystem](#filesystem)
+- [HowToRun](#howtorun)
 - [Tests](#tests)
 - [Aknowledgements](#aknowledgements)
 - [License](#license)
@@ -85,8 +86,19 @@ python3 probability.py
 from `src/`.
 The `test/` directory is meant for the testing of the built code.
 
-
-
+## HowToRun
+There are two possible ways of running the code. You can either modify the `parameters.txt` file and then compile with `cd build; make`  and run `./probability`, OR you can just run the shell-script `./run.sh` form the parent directory. Remember to make it executable, i.e.
+```bash
+chmod +rx run.sh
+```
+When running the shell-script you give the parameters as command line arguments (we modify file `parameters.txt` under the hood for you :wink:):
+```bash
+./run.sh <M> <dT> <T> <xc> <yc> <sigmax> <sigmay> <px> <py> <nslit>
+```
+An example would be
+```bash
+./run.sh 200 0.000025 0.008 0.25 0.5 0.05 0.1 200 0 3
+```
 ## Tests
 CMake provides an easy command for code testing, i.e. from `build/` you can run
 ```bash
