@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 import pandas as pd
 #import seaborn as sns
 #state0 = pd.read_csv("../build/data/probability_M5_no_slit.txt", names= ['t', 'p'], sep=" ")

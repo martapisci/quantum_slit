@@ -30,5 +30,8 @@
 # Initial momentum (y) of the wave packet:
 0
 #-------------------------------------------------------------------------
+# Height of potential barrier:
+1e10
+#-------------------------------------------------------------------------
 # Slit configuration (0 = no slit, 1 = single, 2 = double, 3 = triple):
-3
+1

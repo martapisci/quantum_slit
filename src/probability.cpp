@@ -10,6 +10,7 @@
 #include <chrono>
 #include <sstream>
 #include <iomanip>
+#include "progressbar.hpp"
 
 int main()
 {
@@ -55,21 +56,28 @@ int main()
     // Close the input file
     parameters.close();
     // ----------------------- PARAMETERS -----------------------
-    int M = input_data.at(0);                     // number of points along one side
-    double h = 1. / M;                            // spatial step
-    double dt = input_data.at(1);                 // time step
-    double T = input_data.at(2);                  // final time
-    double x_c = input_data.at(3);                // Coordinate (x) of the center of the wave packet
-    double y_c = input_data.at(4);                // Coordinate (y) of the center of the wave packet;
-    double sgm_x = input_data.at(5);              // Initial width (x) of the wave packet
-    double sgm_y = input_data.at(6);              // Initial width (y) of the wave packet
-    double p_x = input_data.at(7);                // Initial momentum (x) of the wave packet
-    double p_y = input_data.at(8);                // Initial momentum (y) of the wave packet
-    int switch_potential = (int)input_data.at(9); // Potential switch
-    double V0 = 1e10;
-
+    int M = input_data.at(0);                   // number of points along one side
+    double h = 1. / M;                          // spatial step
+    double dt = input_data.at(1);               // time step
+    double T = input_data.at(2);                // final time
+    double x_c = input_data.at(3);              // Coordinate (x) of the center of the wave packet
+    double y_c = input_data.at(4);              // Coordinate (y) of the center of the wave packet;
+    double sgm_x = input_data.at(5);            // Initial width (x) of the wave packet
+    double sgm_y = input_data.at(6);            // Initial width (y) of the wave packet
+    double p_x = input_data.at(7);              // Initial momentum (x) of the wave packet
+    double p_y = input_data.at(8);              // Initial momentum (y) of the wave packet
+    double V0 = input_data.at(9);               // Height of the potential barrier
+    int switch_potential = input_data.at(10);   // Potential switch
     // ----------------------------------------------------------
 
+
+    // ----------------------- PROGRESSBAR -----------------------
+    progressbar bar(100);
+    bar.set_todo_char(" ");
+    bar.set_done_char("█");
+    // ----------------------------------------------------------
+
+    
     // total current probabilty
     double probability_now;
     // Print parameters
@@ -123,8 +131,9 @@ int main()
     ofile << scientific_format(t, width, prec) << " " << scientific_format(probability_now - 1., width, prec) << std::endl;
     for (int i = 1; i <= Nt; i++)
     {
+        bar.update();
+        //std::cout << "Now calculating t=" << t << std::endl;
         t = i * dt;
-        std::cout << "Now calculating t=" << t << std::endl;
         lattice.evolve();
         lattice.probability(probability_now);
         ofile << scientific_format(t, width, prec) << " " << scientific_format(probability_now - 1., width, prec) << std::endl;

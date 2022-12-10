@@ -30,6 +30,8 @@ In order to be able to run everything succesfully you will need:
 * `armadillo`, an efficient linear algebra library
 * `cmake`, for building (optional, recommended)
 
+This project also uses the header-only [`progressbar`](https://github.com/gipert/progressbar) library, which is already included in this repository in `include/progressbar.hpp`.
+
 ## Building
 
 Clone this repo with
@@ -93,11 +95,11 @@ chmod +rx run.sh
 ```
 When running the shell-script you give the parameters as command line arguments (we modify file `parameters.txt` under the hood for you :wink:):
 ```bash
-./run.sh <M> <dT> <T> <xc> <yc> <sigmax> <sigmay> <px> <py> <nslit>
+./run.sh <M> <dT> <T> <xc> <yc> <sigmax> <sigmay> <px> <py> <v0> <nslit>
 ```
 An example would be
 ```bash
-./run.sh 200 0.000025 0.008 0.25 0.5 0.05 0.1 200 0 3
+./run.sh 200 0.000025 0.008 0.25 0.5 0.05 0.1 200 0 1e10 3
 ```
 ## Tests
 CMake provides an easy command for code testing, i.e. from `build/` you can run
