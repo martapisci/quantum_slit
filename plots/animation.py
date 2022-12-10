@@ -32,6 +32,7 @@ fontsize = 12
 w = 10
 h = 10
 show_colorbar = False
+animation_extention = ".gif"
 
 nslit = 0
 plist = [p0,p1,p2,p3]
@@ -77,6 +78,6 @@ for p in plist:
     anim = FuncAnimation(fig, animation, interval=1, frames=np.arange(0, len(p), 2), repeat=False, blit=0)
 
     # # Save the animation
-    anim.save(f'../build/plots/p{nslit}.mp4', writer="ffmpeg", bitrate=-1, fps=30)
+    anim.save(f'../build/plots/p{nslit}'+animation_extention, writer="ffmpeg", bitrate=-1, fps=30)
     nslit+=1
     plt.cla()
