@@ -124,20 +124,20 @@ python3 animation.py
 This is going to be the result:
 <p align="center">
 <button  style="border: transparent; background-color: transparent;">
-    <img align="left" width=10% src="demo/no_slit"> 
+    <img align="left" width=25% src="demo/no_slit.gif"> 
 </button>
 <button  style="border: transparent; background-color: transparent;">
-    <img align="left" width=10% src="demo/single_slit"> 
+    <img align="left" width=25% src="demo/single_slit.gif"> 
 </button>
 <button style="border: transparent; background-color: transparent;">
-    <img align="left" width=10% src="demo/double_slit"> 
+    <img align="left" width=25% src="demo/double_slit.gif"> 
 </button>
 <button style="border: transparent; background-color: transparent;">
-    <img align="left" width=10% src="demo/triple_slit"> 
+    <img align="left" width=25% src="demo/triple_slit.gif"> 
 </button>
 </p>
 
-
+&emsp; &emsp; &emsp; &emsp; &emsp; 
 
 ## License
 
