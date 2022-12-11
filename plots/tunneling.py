@@ -11,7 +11,7 @@ p0.load('../build/data/modulus_nslit0.bin')
 p0 = np.array(p0)
 
 # ---------------- PLOT OPTIONS ----------------
-M = 200
+Nt, M, _ = p0.shape
 w = 8
 h = 6
 fs = 18
@@ -28,8 +28,14 @@ for t in range(3):
     prob = p0[int(t*0.001/2.5e-5),:,M//2]
     prob /= np.linalg.norm(prob)
 
+    p_tunnel = max(prob[M//2+20:])
+    x_tunnel = np.where(prob == p_tunnel)[0][0]/200.
+
+    print(x_tunnel)
     plt.plot(y[1:], prob[1:], 'k')
-    #plt.vlines(0.49, 0, 1, 'grey')
-    #plt.vlines(0.51, 0, 1, 'grey')
     plt.axvspan(0.49, 0.51, alpha=0.5, color='grey')
+    
+    plt.text(0.8, 0.05, f"p(x={x_tunnel:.2g}) = {p_tunnel:.2g}", color="black", horizontalalignment="center", verticalalignment="center", fontsize=fs)
+    
+    
     plt.savefig(f"../build/plots/tunnel_t{t}.pdf") if save_fig else plt.show()    
