@@ -37,8 +37,11 @@ public:
      * @brief Set the potential matrix
      * @param V Potential matrix
      * @param switch Set potential to zero everywhere (switch=0), or single(1)/double(2)/triple(3) slit
+     * @param V0 Height of the potential barrier
+     * @param i_lw Row index for left wall
+     * @param i_rw Row index for right wall
      */
-    void set_potential(arma::sp_mat &V_given, const int &switch_given, const double V0);
+    void set_potential(arma::sp_mat &V_given, const int &switch_given, const double V0, int i_lw = -1, int i_rw = -1);
 
     /**
      * @brief Set A and B matrices

@@ -32,34 +32,38 @@ Schrodinger::Schrodinger(const int M_given, const double h_given, const double d
 }
 
 // Set the potential matrix
-void Schrodinger::set_potential(arma::sp_mat &V_given, const int &switch_given, const double V0)
+void Schrodinger::set_potential(arma::sp_mat &V_given, const int &switch_given, const double V0, int i_lw, int i_rw)
 {
-        V = &V_given;
+    V = &V_given;
+
+    // If negative values than use the defaults
+    if (i_lw < 0){ i_lw = 0.49/h - 1; }
+    if (i_rw < 0){ i_rw = 0.51/h - 1; }
 
     switch(switch_given){
         case 0:
-            make_wall(0.49/h - 1, 0.51/h - 1, 0., M-3, V0);
+            make_wall(i_lw, i_rw, 0., M-3, V0);
             break;
         case 1:
-            make_wall(0.49/h - 1, 0.51/h - 1, 0., 0.475/h - 1, V0);
+            make_wall(i_lw, i_rw, 0., 0.475/h - 1, V0);
             // slit
-            make_wall(0.49/h - 1, 0.51/h - 1, 0.525/h - 1, M-3, V0);
+            make_wall(i_lw, i_rw, 0.525/h - 1, M-3, V0);
             break;
         case 2: 
-            make_wall(0.49/h - 1, 0.51/h - 1, 0, 0.425/h - 1, V0);
+            make_wall(i_lw, i_rw, 0, 0.425/h - 1, V0);
             // slit
-            make_wall(0.49/h - 1, 0.51/h - 1, 0.475/h - 1, 0.525/h - 1, V0);
+            make_wall(i_lw, i_rw, 0.475/h - 1, 0.525/h - 1, V0);
             // slit
-            make_wall(0.49/h - 1, 0.51/h - 1, 0.575/h - 1, M-3, V0);
+            make_wall(i_lw, i_rw, 0.575/h - 1, M-3, V0);
             break;
         case 3:
-            make_wall(0.49/h - 1, 0.51/h - 1, 0, 0.375/h - 1, V0);
+            make_wall(i_lw, i_rw, 0, 0.375/h - 1, V0);
             // slit
-            make_wall(0.49/h - 1, 0.51/h - 1, 0.425/h - 1, 0.475/h - 1, V0);
+            make_wall(i_lw, i_rw, 0.425/h - 1, 0.475/h - 1, V0);
             // slit
-            make_wall(0.49/h - 1, 0.51/h - 1, 0.525/h - 1, 0.575/h - 1, V0);
+            make_wall(i_lw, i_rw, 0.525/h - 1, 0.575/h - 1, V0);
             // slit
-            make_wall(0.49/h - 1, 0.51/h - 1, 0.625/h - 1, M-3, V0);
+            make_wall(i_lw, i_rw, 0.625/h - 1, M-3, V0);
             break;
     }
 }
