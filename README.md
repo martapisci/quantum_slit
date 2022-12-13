@@ -78,16 +78,15 @@ quantum_slit
 │
 └───src/
 │
-└───test/
+└───demo/
 ```
 Inside the `build/` directory you can find the executables and two subfolders: `build/data/` for storing the resulting data and `build/plots/` for storing the plots of the same resulting data.
-In the `include/` directory are stored all the header filese and in the `src/` directory are stored the source files.
-In `plots/` you can find also the python scripts that make the graphs and store them in `build/plots/`. For example, to make the plots of `twobody.cpp` simply run
+In the `include/` directory are stored all the header files and in the `src/` directory are stored the source files.
+In `plots/` you can find also the python scripts that make the graphs and store them in `build/plots/`. For example, to make the animations simply run
 ```bash
-python3 probability.py
+python3 animation.py
 ```
-from `src/`.
-The `test/` directory is meant for the testing of the built code.
+from `plots/`.  In `demo/` you have the output  animations obtained following  the steps explained in the section Demo.
 
 ## HowToRun
 There are two possible ways of running the code. You can either modify the `parameters.txt` file and then compile with `cd build; make`  and run `./probability`, OR you can just run the shell-script `./run.sh` form the parent directory. Remember to make it executable, i.e.
@@ -100,22 +99,16 @@ When running the shell-script you give the parameters as command line arguments 
 ```
 An example would be
 ```bash
-./run.sh 200 0.000025 0.008 0.25 0.5 0.05 0.1 200 0 1e10 3
+./run.sh 200 0.000025 0.008 0.25 0.5 0.05 0.1 200. 0. 1e10 3
 ```
-## Tests
-CMake provides an easy command for code testing, i.e. from `build/` you can run
-```bash
-ctest
-```
-In this way all tests are run.
 
 ## Demo
 Here you can find a little demonstration of what you can do with our beautiful little program. First of all run
 ```bash
-./run.sh 200 0.000025 0.003 0.25 0.5 0.05 0.2 200 0 0. 0
-./run.sh 200 0.000025 0.003 0.25 0.5 0.05 0.2 200 0 1e10 1
-./run.sh 200 0.000025 0.003 0.25 0.5 0.05 0.2 200 0 1e10 2
-./run.sh 200 0.000025 0.003 0.25 0.5 0.05 0.2 200 0 1e10 3
+./run.sh 200 0.000025 0.003 0.25 0.5 0.05 0.2 200. 0. 0. 0
+./run.sh 200 0.000025 0.003 0.25 0.5 0.05 0.2 200. 0. 1e10 1
+./run.sh 200 0.000025 0.003 0.25 0.5 0.05 0.2 200. 0. 1e10 2
+./run.sh 200 0.000025 0.003 0.25 0.5 0.05 0.2 200. 0. 1e10 3
 ```
 After all of them finished you can move to `plots/` and make the animations with
 ```bash

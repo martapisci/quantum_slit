@@ -12,7 +12,6 @@ h = 4
 fs = 12
 save_fig = True
 
-# epsilon(T)
 plt.figure(figsize=(w,h))
 plt.plot(psi0['t'], np.abs(psi0['p']), '.', markersize=2, label='no slit')
 #plt.plot(psi1['t'], np.abs(psi1['p']), '.', markersize=2, label='1 slit')
@@ -20,7 +19,7 @@ plt.plot(psi2['t'], np.abs(psi2['p']), '.', markersize=2, label='2 slits')
 #plt.plot(psi3['t'], np.abs(psi3['p']), '.', markersize=2, label='3 slits')
 
 plt.xscale('log')
-plt.legend(loc='best', fontsize = fs)
+plt.legend(loc='best', markerscale=5., fontsize = fs)
 plt.xlabel("$t$")
 plt.ylabel("$\Delta p(t)$")
 plt.savefig("../build/plots/probability_conservation.pdf") if save_fig else plt.show()

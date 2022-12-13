@@ -56,7 +56,7 @@ h = 4
 fs = 12
 save_fig = True
 
-def make_colormap(data, filename, w, h, fs, save_fig):
+def make_colormap(data, filename, label, w, h, fs, save_fig):
     fig = plt.figure(figsize=(w, h))
     ax = plt.gca()
     plt.xlabel("x", fontsize=fs)
@@ -68,7 +68,7 @@ def make_colormap(data, filename, w, h, fs, save_fig):
     img = ax.imshow(data.T, extent=[0,1,0,1], cmap=plt.get_cmap("inferno"), norm=norm)
 
     cbar = fig.colorbar(img, ax=ax)
-    cbar.set_label("p(x, y)", fontsize=fs)
+    cbar.set_label(label=label, fontsize=fs)
     cbar.ax.tick_params(labelsize=fs)
     plt.savefig(filename) if save_fig else plt.show()
 
@@ -78,8 +78,8 @@ counter = 1
 for (p, re, im) in zip([p1, p2, p3], [re1,  re2, re3], [im1, im2, im3]):
     for t in range(3):
         i = int(0.001*t/0.000025)
-        make_colormap(p[i], f"../build/plots/cmap_p{counter}_t{t*0.001}.pdf", w, h, fs, save_fig)
-        make_colormap(re[i], f"../build/plots/cmap_re{counter}_t{t*0.001}.pdf", w, h, fs, save_fig)
-        make_colormap(im[i], f"../build/plots/cmap_im{counter}_t{t*0.001}.pdf", w, h, fs, save_fig)
+        make_colormap(p[i], f"../build/plots/cmap_p{counter}_t{t*0.001}.pdf", "p(x, y)", w, h, fs, save_fig)
+        make_colormap(re[i], f"../build/plots/cmap_re{counter}_t{t*0.001}.pdf", "Re[Ψ](x, y)", w, h, fs, save_fig)
+        make_colormap(im[i], f"../build/plots/cmap_im{counter}_t{t*0.001}.pdf", "Im[Ψ](x, y)", w, h, fs, save_fig)
     counter += 1
     
