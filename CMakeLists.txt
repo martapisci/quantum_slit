@@ -33,13 +33,6 @@ add_executable(probability
 	src/probability.cpp)
 target_link_libraries(probability PUBLIC trace)
 
-
-# --- TESTS ---
-#add_executable(particle-test
-#    test/particle-test.cpp)
-#target_link_libraries(particle-test PUBLIC trace)
-#add_test(NAME particle-test COMMAND particle-test)
-
 # --- BUILD FILESYSTEM ---
 file(MAKE_DIRECTORY build/plots)
 file(MAKE_DIRECTORY build/data)
